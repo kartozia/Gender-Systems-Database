@@ -24,14 +24,14 @@ Database contains information about structure of gender systems in Nakh-Daghesta
 
 * Language - name of language or its dialect
 * Class — number of gender in a language
-* Sg - class marker in singular
-* PL - class marker in plural
-*	S_label - source label, how class marked in the source (e.g. Roman numbers)
+* Sg - gender marker in singular
+* PL - gender marker in plural
+*	S_label - source label, how gender marked in the source (e.g. Roman numbers)
 * label - custom labels:
-    *	F for class where all women and only women are included
-    *	M for class where all men and only men are included
-    *	N a third class that includes everything except F and M (is the only such class)
-*	semantic - semantic description of the class from the source
+    *	F for gender where all women and only women are included
+    *	M for gender where all men and only men are included
+    *	N a third gender that includes everything except F and M (is the only such gender)
+*	semantic - semantic description of the gender from the source
 *	source - info source, e.g. [Ihilov 1967: 9-15]
 *	comments - for any extra info one would like to mention
 
