@@ -1,0 +1,70 @@
+---
+output: 
+  html_document:
+    include:
+      after_body: footer.html
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'docs';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), out_dir, 'index.html')) })
+---
+
+```{r setup, include=FALSE, warning=F}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE)
+```
+
+###  Gender Systems in Nakh-Daghestaninan languages {.tabset .tabset-fade .tabset-pills}
+Some characters may be displayed incorrectly.
+
+Download database: [.csv](https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/noun_classes.csv)
+
+#### about database
+Database contains information about structure of gender systems in Nakh-Daghestaninan languages.
+
+* Language - name of language or its dialect
+* Class — number of gender in a language
+* Sg - class marker in singular
+* PL - class marker in plural
+*	S_label - source label, how class marked in the source (e.g. Roman numbers)
+* label - custom labels:
+    *	F for class where all women and only women are included
+    *	M for class where all men and only men are included
+    *	N a third class that includes everything except F and M (is the only such class)
+*	semantic - semantic description of the class from the source
+*	source - info source, e.g. [Ihilov 1967: 9-15]
+*	comments - for any extra info one would like to mention
+
+
+```{r}
+#bibliography <- read.csv("bibliography.csv", sep = "\t", na.strings = "")
+noun <- read.csv("https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/noun_classes.csv", sep = ";")
+names(noun)[1] <- "index"
+#library(lingtypology)
+#map.feature(unique(bibliography$language),
+ #           label = unique(bibliography$language),
+  #          label.hide = TRUE,
+   #         color = "blue")
+```
+
+#### search
+```{r}
+library(DT)
+datatable(noun[, -10], filter = 'top', rownames = FALSE, options = list(pageLength = 20, dom = 'tip'), escape = FALSE)
+```
+
+#### bibliography
+```{r}
+library(RefManageR)
+BibOptions(check.entries = FALSE)
+bib <- ReadBib("./docs/bibliography.bib")
+vec <- as.vector(noun$source_bibtex)
+df <- data.frame(lang = noun$Language,
+                 citation = vec,
+                 stringsAsFactors = FALSE)
+
+df <- unique(df)
+df$citation_text <- sapply(df$citation, function(i){Cite(bib, i)})
+#datatable(bibliography, filter = 'top', rownames = FALSE, options = list(pageLength = 20, autoWidth = FALSE), escape = FALSE)
+PrintBibliography(bib)
+```
