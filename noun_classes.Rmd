@@ -1,0 +1,129 @@
+---
+output: 
+  html_document:
+    include:
+      after_body: footer.html
+knit: (function(inputFile, encoding) { 
+      out_dir <- 'docs';
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), out_dir, 'index.html')) })
+---
+
+```{r setup, include=FALSE, warning=F}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE)
+```
+
+###  Gender Systems in Nakh-Daghestaninan languages {.tabset .tabset-fade .tabset-pills}
+Some characters may be displayed incorrectly.
+
+Download database: [.csv](https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/noun_classes.csv)
+
+#### about database
+Database contains information about structure of gender systems in Nakh-Daghestaninan languages.
+
+* Language - name of language or its dialect
+* Class — number of gender in a language
+* Sg - gender marker in singular
+* PL - gender marker in plural
+*	S_label - source label, how gender marked in the source (e.g. Roman numbers)
+* label - custom labels:
+    *	F for gender where all women and only women are included
+    *	M for gender where all men and only men are included
+    *	N a third gender that includes everything except F and M (is the only such gender)
+*	semantic - semantic description of the gender from the source
+*	source - info source, e.g. [Ihilov 1967: 9-15]
+*	comments - for any extra info one would like to mention
+
+
+```{r}
+#bibliography <- read.csv("bibliography.csv", sep = "\t", na.strings = "")
+noun <- read.csv("https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/noun_classes.csv", sep = ";")
+names(noun)[1] <- "index"
+#library(lingtypology)
+#map.feature(unique(bibliography$language),
+ #           label = unique(bibliography$language),
+  #          label.hide = TRUE,
+   #         color = "blue")
+```
+
+#### search
+```{r}
+library(DT)
+datatable(noun[, -10], filter = 'top', rownames = FALSE, options = list(pageLength = 20, dom = 'tip'), escape = FALSE)
+```
+
+#### spatial autocorrelation
+Spatial autocorrelation was calculated globally and localy in order to detect any spatial patterns in distribution of gender systems. 
+Used tests:
+
+* Moran's *I* — gloabl spatial autocorrelation
+* Getis and Ord *Gi* — local spatial autocorrelation
+
+First Moran's *I* is calculated
+``` {r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(lingtypology)
+library(spdep)
+df <- read.csv("https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/allvillages_v2.csv", sep = ";")
+df <- as_tibble(df)
+sp_df <- df[,c(2,3,4,9,12,13)]
+sp_df <- unique(sp_df)
+sp_df[is.na(sp_df)] <- 0
+space <- cbind(as.numeric(sp_df$Lon), as.numeric(sp_df$Lat))
+test <- knn2nb(knearneigh(space, k=10, longlat = TRUE), row.names = sp_df$index)
+final <- include.self(test)
+ww <- nb2listw(final, style='B', zero.policy = TRUE)
+moran.test(sp_df$classes, ww,randomisation=FALSE)
+```
+Than Moran's *I* Monte Carlo simulation to verify the results
+``` {r}
+moran.mc(sp_df$classes, ww, nsim=99)
+```
+
+Calculating and mapping Getis and Ord *Gi*
+``` {r}
+localGvalues <- localG(x = as.numeric(sp_df$classes), listw = ww, zero.policy = TRUE)
+localGvalues <- round(localGvalues,3)
+sp_df$values <- localGvalues
+sp_df <- sp_df[,-1]
+#globalG.test(sp_df$classes, ww)
+map.feature(languages = sp_df$Language,
+            latitude = as.numeric(sp_df$Lat),
+            longitude = as.numeric(sp_df$Lon),
+            features = as.numeric(sp_df$values),
+            label = paste(sp_df$Language,sp_df$classes),
+            popup = sp_df$EngNames,
+            tile = 'CartoDB.Positron',
+            color= "viridis",
+            width = 3.5, stroke.radius = 3)
+```
+
+Map with language borders
+TBA
+```{r}
+
+```
+
+#### bibliography
+```{r}
+library(RefManageR)
+BibOptions(check.entries = FALSE)
+bib <- ReadBib("./docs/bibliography.bib")
+vec <- as.vector(noun$source_bibtex)
+df <- data.frame(lang = noun$Language,
+                 citation = vec,
+                 stringsAsFactors = FALSE)
+
+df <- unique(df)
+df$citation_text <- sapply(df$citation, function(i){Cite(bib, i)})
+#datatable(bibliography, filter = 'top', rownames = FALSE, options = list(pageLength = 20, autoWidth = FALSE), escape = FALSE)
+<<<<<<< HEAD
+```
+=======
+PrintBibliography(bib)
+```
+<<<<<<< HEAD
+>>>>>>> e9b41d9f1aa602c9f24c83070fa0e21fb954c79f
+=======
+>>>>>>> 3bbcf342e874adf5cc4bf68b9b5de84371d95897
