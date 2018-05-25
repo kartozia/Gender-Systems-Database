@@ -86,7 +86,7 @@ moran.test(sp_df$classes, ww,randomisation=FALSE)
 ```
 Than Moran's *I* Monte Carlo simulation to verify the results
 ``` {r}
-moran.mc(sp_df$classes, ww, nsim=99)
+moran.mc(sp_df$classes, ww, nsim=999)
 ```
 
 Calculating and mapping Getis and Ord *Gi*
