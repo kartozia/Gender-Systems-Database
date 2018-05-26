@@ -43,7 +43,6 @@ noun <- read.csv("https://raw.githubusercontent.com/kartozia/spatial_analysis_of
 names(noun)[1] <- "index"
 df <- read.csv("https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/allvillages_v2.csv", sep = ";")
 df <- as_tibble(df)
-
 map.feature(languages = df$Language,
             latitude = as.numeric(df$Lat),
             longitude = as.numeric(df$Lon),
@@ -75,7 +74,7 @@ library(lingtypology)
 library(spdep)
 df <- read.csv("https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/allvillages_v2.csv", sep = ";")
 df <- as_tibble(df)
-sp_df <- df[,c(2,3,4,9,12,13)]
+sp_df <- df[,c(2,3,4,8,9,12,13)]
 sp_df <- unique(sp_df)
 sp_df[is.na(sp_df)] <- 0
 space <- cbind(as.numeric(sp_df$Lon), as.numeric(sp_df$Lat))
@@ -100,7 +99,7 @@ map.feature(languages = sp_df$Language,
             latitude = as.numeric(sp_df$Lat),
             longitude = as.numeric(sp_df$Lon),
             features = as.numeric(sp_df$values),
-            label = paste(sp_df$Language,sp_df$classes),
+            label = paste(sp_df$Language,sp_df$classes,sp_df$dialect),
             popup = sp_df$EngNames,
             tile = 'CartoDB.Positron',
             color= "viridis",
@@ -126,12 +125,5 @@ df <- data.frame(lang = noun$Language,
 df <- unique(df)
 df$citation_text <- sapply(df$citation, function(i){Cite(bib, i)})
 #datatable(bibliography, filter = 'top', rownames = FALSE, options = list(pageLength = 20, autoWidth = FALSE), escape = FALSE)
-<<<<<<< HEAD
-```
-=======
 PrintBibliography(bib)
 ```
-<<<<<<< HEAD
->>>>>>> e9b41d9f1aa602c9f24c83070fa0e21fb954c79f
-=======
->>>>>>> 3bbcf342e874adf5cc4bf68b9b5de84371d95897
