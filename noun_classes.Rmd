@@ -106,12 +106,6 @@ map.feature(languages = sp_df$Language,
             width = 3.5, stroke.radius = 3)
 ```
 
-Map with language borders
-TBA
-```{r}
-
-```
-
 #### references
 ```{r}
 library(RefManageR)
