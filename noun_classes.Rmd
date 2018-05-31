@@ -15,7 +15,6 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE)
 ```
 
 ###  Gender Systems in Nakh-Daghestaninan languages {.tabset .tabset-fade .tabset-pills}
-Some characters may be displayed incorrectly.
 
 Download database of gender systems: [.csv](https://raw.githubusercontent.com/kartozia/spatial_analysis_of_NakhDaghestanian_languages/master/data/noun_classes.csv)
 
